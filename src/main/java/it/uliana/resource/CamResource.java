@@ -25,7 +25,7 @@ public class CamResource {
     @Autowired
     private CamService camService;
 
-    @RequestMapping(value = "api/cam", method = RequestMethod.GET, produces = "image/png")
+    @RequestMapping(value = "api/cam", method = RequestMethod.GET, produces = "image/jpeg")
     public @ResponseBody byte[] getFile()  {
         logger.info("Cam API access");
         try {

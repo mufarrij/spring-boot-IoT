@@ -1,15 +1,14 @@
 package it.uliana.service;
 
-import com.github.sarxos.webcam.Webcam;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Optional;
+import java.io.InputStream;
 
 /**
  * Created by Francesco Uliana <francesco@uliana.it> on 21/05/16.
@@ -19,22 +18,18 @@ public class CamService {
 
     private final static Logger logger = LoggerFactory.getLogger(CamService.class);
     public static final String FORMAT_NAME = "jpg";
+    private static final String file = "web-cam-shot.jpg";
 
     public byte[] snap() throws IOException {
-        logger.debug("opening webcam");
-        Webcam webcam = Optional
-                .ofNullable(Webcam.getDefault())
-                .orElseThrow(() -> new IOException("webcam is not present"));
 
-        logger.info("using webcam {} - {}", webcam.getName(), webcam.getDevice().getName());
-        webcam.open();
-        BufferedImage img = webcam.getImage();
-        webcam.close();
+        Runtime rt = Runtime.getRuntime();
+        Process pr = rt.exec("fswebcam -r 640x480 --jpeg 85 -D 1 " + file);
+        InputStream is = pr.getInputStream();
+        String s = IOUtils.toString(is);
+        FileInputStream fis = new FileInputStream(file);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        IOUtils.copy(fis, bos);
+        return bos.toByteArray();
 
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        ImageIO.write(img, FORMAT_NAME, bao);
-        byte[] bytes = bao.toByteArray();
-        logger.info("created image {} of size {}", FORMAT_NAME, bytes.length);
-        return bytes;
     }
 }
