@@ -47,7 +47,10 @@ public class PageResource {
     public String home () {
         logger.info("Home Access");
         String temperature = temperatureService.getTemperature().map(String::valueOf).orElse("non disponibile");
-        String description = weatherService.getWeather().getWeather().get(0).getDescription();
+        String description = weatherService
+                .getWeather()
+                .map(w -> w.getWeather().get(0).getDescription())
+                .orElse("no weather info available");
         return String.format(html, temperature, description);
     }
 

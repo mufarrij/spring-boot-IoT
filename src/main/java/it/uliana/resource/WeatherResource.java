@@ -24,6 +24,6 @@ public class WeatherResource {
     @RequestMapping("api/weather")
     public Weather get() {
         logger.info("Weather API access");
-        return weatherService.getWeather();
+        return weatherService.getWeather().get();
     }
 }

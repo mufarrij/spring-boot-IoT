@@ -26,7 +26,7 @@ public class WeatherServiceTest {
 
     @Test
     public void testGetWeather() throws Exception {
-        Weather w = weatherService.getWeather();
-        assertEquals(3, 2);
+        Weather w = weatherService.getWeather().get();
+        assertEquals(w.getName(), "Comune di Roma");
     }
 }
