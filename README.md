@@ -6,3 +6,5 @@ Internet of Things and Java - example project for uniroma3 classroom
 ```
 ./mvnw spring-boot:run
 ```
+
+browse to <http://localhost:8080/>
