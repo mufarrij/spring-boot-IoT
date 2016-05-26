@@ -1,0 +1,773 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Uniroma3 IoT</title>
+  <style type="text/css">
+    body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #222;
+  font-size: 100%;
+}
+
+.slide {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  background-color: #f7f7f7;
+}
+
+.slide-content {
+  width: 800px;
+  height: 600px;
+  overflow: hidden;
+  margin: 80px auto 0 auto;
+  padding: 30px;
+
+  font-weight: 200;
+  font-size: 200%;
+  line-height: 1.375;
+}
+
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.arrow {
+  width: 0; height: 0;
+  border: 30px solid #333;
+  float: left;
+  margin-right: 30px;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.prev {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+
+  border-left-width: 0;
+  border-right-width: 50px;
+}
+
+.next {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+
+  border-left-width: 50px;
+  border-right-width: 0;
+}
+
+.prev:hover {
+  border-right-color: #888;
+  cursor: pointer;
+}
+
+.next:hover {
+  border-left-color: #888;
+  cursor: pointer;
+}
+
+h1 {
+  font-size: 300%;
+  line-height: 1.2;
+  text-align: center;
+  margin: 170px 0 0;
+}
+
+h2 {
+  font-size: 100%;
+  line-height: 1.2;
+  margin: 5px 0;
+  text-align: center;
+  font-weight: 200;
+}
+
+h3 {
+  font-size: 140%;
+  line-height: 1.2;
+  border-bottom: 1px solid #aaa;
+  margin: 0;
+  padding-bottom: 15px;
+}
+
+ul {
+  padding: 20px 0 0 60px;
+  font-weight: 200;
+  line-height: 1.375;
+}
+
+.author h1 {
+  font-size: 170%;
+  font-weight: 200;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.author h3 {
+  font-weight: 100;
+  text-align: center;
+  font-size: 95%;
+  border: none;
+}
+
+a {
+  text-decoration: none;
+  color: #44a4dd;
+}
+
+a:hover {
+  color: #66b5ff;
+}
+
+pre {
+  font-size: 60%;
+  line-height: 1.3;
+}
+
+.progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 3px;
+  background-color: #b4b4b4;
+
+  -webkit-transition: width 0.05s ease-out;
+  -moz-transition: width 0.05s ease-out;
+  -o-transition: width 0.05s ease-out;
+  transition: width 0.05s ease-out;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 850px) {
+
+  body {
+    font-size: 70%;
+  }
+
+  .slide-content {
+    width: auto;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  h1 {
+    margin-top: 120px;
+  }
+
+  .prev, .prev:hover {
+    border-right-color: rgba(135, 135, 135, 0.5);
+  }
+
+  .next, .next:hover {
+    border-left-color: rgba(135, 135, 135, 0.5);
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 50%;
+    overflow: hidden;
+  }
+
+  .slide-content {
+    padding: 10px;
+    margin-top: 10px;
+    height: 340px;
+  }
+
+  h1 {
+    margin-top: 50px;
+  }
+
+  ul {
+    padding-left: 25px;
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+  }
+
+  @page {
+    size: letter;
+  }
+
+  .hidden {
+    display: inline;
+  }
+
+  html {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  body {
+    margin: 0 auto !important;
+    border: 0;
+    padding: 0;
+    float: none !important;
+    overflow: visible;
+    background: none !important;
+    font-size: 52%;
+  }
+
+  .progress, .controls {
+    display: none;
+  }
+
+  .slide {
+    position: static;
+  }
+
+  .slide-content {
+    border: 1px solid #222;
+    margin-top: 0;
+    margin-bottom: 40px;
+    height: 3.5in;
+    overflow: visible;
+  }
+
+  .slide:nth-child(even) {
+    /* 2 slides per page */
+    page-break-before: always;
+  }
+}
+
+/*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #008080;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #d14;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #900;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: #009926;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #990073;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #0086b3;
+}
+
+.hljs-meta {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+
+  </style>
+</head>
+<body>
+    <div class="progress">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="slide" id="slide-1">
+    <section class="slide-content"><h1 id="java-and-the-iot">Java and the IoT</h1>
+<h2 id="26-05-2016">26-05-2016</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-2">
+    <section class="slide-content"><h3 id="francesco-uliana">Francesco Uliana</h3>
+<p>Tecnologo @ CNR</p>
+<p>Reti e Sistemi informativi - UF Sistemi Enterprise</p>
+<ul>
+<li>Java Enterprise</li>
+<li>Sistemi distribuiti</li>
+<li>IoT</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-3">
+    <section class="slide-content"><h3 id="il-progetto-weather-station-in-a-box">Il progetto: Weather Station in a box</h3>
+<p>Requisiti:</p>
+<ul>
+<li>acquisizione temperatura via sensore</li>
+<li>webcam</li>
+<li>informazioni meteo</li>
+<li>fornire accesso mediante interfaccia web</li>
+<li><del>comunicazione su Twitter</del></li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-4">
+    <section class="slide-content"><h3 id="obiettivi">Obiettivi</h3>
+<ul>
+<li>realizzazione di un&#39;applicazione &quot;real world&quot; Java 8</li>
+<li>interagire con Web APIs<ul>
+<li><del>Twitter</del></li>
+<li>OpenWeatherMap</li>
+</ul>
+</li>
+<li>utilizzare strumenti di versionamento del codice (e.g. git)</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-5">
+    <section class="slide-content"><h3 id="strumenti">Strumenti</h3>
+<ul>
+<li>Raspberry Pi</li>
+<li>Java 8 + Spring 4</li>
+<li>Temperature Sensor TC74A</li>
+<li>Webcam UVC</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-6">
+    <section class="slide-content"><h3 id="raspberry-pi">Raspberry Pi</h3>
+<ul>
+<li>single-board computer</li>
+<li>sette versioni 5÷35 $<ul>
+<li>un processore ARM</li>
+<li>256, 512, 1024M di memoria.</li>
+<li>SD per boot e memoria non volatile</li>
+</ul>
+</li>
+<li>supporta sistemi operativi basati sul kernel Linux</li>
+</ul>
+<!-- un calcolatore implementato su una sola scheda elettronica -->
+<!-- insegnamento di base dell'informatica e della programmazione --></section>
+  </div>
+  <div class="slide hidden" id="slide-7">
+    <section class="slide-content"><h3 id="raspberry-pi">Raspberry Pi</h3>
+<p><img src="./images/MKRPI2-2.jpg" alt="Raspberry Pi" title="Raspberry Pi"></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-8">
+    <section class="slide-content"><h3 id="temperature-sensor-tc74a">Temperature sensor TC74A</h3>
+<p><img src="./images/temperatura_tc74a.jpg" alt="TC74A" title="TC74A"></p>
+<p>comunica su <strong>I2C</strong> con address <em>0x48</em>.</p>
+<p>Funziona tra -40°C e +125°C e può essere alimentato sia a 3V che a 5V.</p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-9">
+    <section class="slide-content"><h3 id="i2c">I2C</h3>
+<p><strong>I²C</strong>, abbreviazione di Inter Integrated Circuit (pronuncia i-quadro-ci o i-due-ci), è un sistema di comunicazione seriale bifilare utilizzato tra circuiti integrati.</p>
+<p>Standard supportato da Arduino e Raspberry Pi</p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-10">
+    <section class="slide-content"><h3 id="web-apis">Web APIs</h3>
+<p><strong>application programming interface (API)</strong></p>
+<ul>
+<li>programmatic interface</li>
+<li>one or more publicly exposed endpoints</li>
+<li>typically expressed in JSON or XML</li>
+<li>HTTP-based.</li>
+</ul>
+<p>e.g. Facebook, Twitter</p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-11">
+    <section class="slide-content"><p><a href="http://api.openweathermap.org/data/2.5/weather?id=3169071&amp;appid=XYZ">http://api.openweathermap.org/data/2.5/weather?id=3169071&amp;appid=XYZ</a></p>
+<pre><code>{
+    &quot;coord&quot;: {
+        &quot;lon&quot;: 12.42,
+        &quot;lat&quot;: 41.9
+    },
+    &quot;weather&quot;: [{
+        &quot;id&quot;: 800,
+        &quot;main&quot;: &quot;Clear&quot;,
+        &quot;description&quot;: &quot;clear sky&quot;,
+        &quot;icon&quot;: &quot;01d&quot;
+    }],
+    &quot;main&quot;: {
+        &quot;temp&quot;: 292.66,
+        &quot;pressure&quot;: 1015,
+        &quot;humidity&quot;: 49
+    },
+    &quot;wind&quot;: {
+        &quot;speed&quot;: 2.1,
+        &quot;deg&quot;: 100
+    },
+    &quot;id&quot;: 3169071,
+    &quot;name&quot;: &quot;Comune di Roma&quot;,
+    &quot;cod&quot;: 200
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-12">
+    <section class="slide-content"><h3 id="architettura">Architettura</h3>
+<ul>
+<li>Java 8</li>
+<li>Spring</li>
+<li>Spring boot (executable jar)</li>
+<li>Maven<ul>
+<li><code>~/uniroma3-iot $  ./mvnw spring-boot:run</code></li>
+</ul>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-13">
+    <section class="slide-content"><h3 id="dipendenze-maven-jar-">Dipendenze Maven (jar)</h3>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;version&gt;1.3.5.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;com.pi4j&lt;/groupId&gt;
+    &lt;artifactId&gt;pi4j-device&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;com.github.sarxos&lt;/groupId&gt;
+    &lt;artifactId&gt;webcam-capture&lt;/artifactId&gt;
+    &lt;version&gt;0.3.10&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-14">
+    <section class="slide-content"><h3 id="acquisizione-temperatura">Acquisizione temperatura</h3>
+<pre><code>public static final int ADDRESS = 0x48;
+public static final int BUS_NUMBER = I2CBus.BUS_1;
+
+I2CBus bus = I2CFactory.getInstance(BUS_NUMBER);
+I2CDevice device = bus.getDevice(ADDRESS);
+int value = device.read(0);</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-15">
+    <section class="slide-content"><h3 id="acquisizione-webcam">Acquisizione webcam</h3>
+<pre><code>Webcam webcam = Webcam.getDefault();
+webcam.open();
+BufferedImage img = webcam.getImage();
+webcam.close();
+ByteArrayOutputStream bao = new ByteArrayOutputStream();
+ImageIO.write(img, &quot;jpg&quot;, bao);
+// do something with bao</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-16">
+    <section class="slide-content"><h3 id="web-api">Web API</h3>
+<pre><code>@Autowired
+private RestTemplate restTemplate;
+
+...
+
+Map&lt;String, String&gt; map = new HashMap();
+map.put(&quot;id&quot;, &quot;3169071&quot;);
+map.put(&quot;appid&quot;, &quot;XYZ&quot;);
+
+ResponseEntity&lt;Weather&gt; w = restTemplate
+    .getForEntity(
+        &quot;http://api.openweathermap.org/.../weather?id={id}&amp;appid={appid}&quot;,
+        Weather.class,
+        map);</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-17">
+    <section class="slide-content"><h3 id="web-page">Web Page</h3>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;title&gt;IoT demo&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;&quot;&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;p&gt;&lt;b&gt;Temperatura:&lt;/b&gt; 99&lt;/p&gt;
+    &lt;p&gt;&lt;b&gt;Meteo:&lt;/b&gt; clear sky&lt;/p&gt;
+    &lt;img src=&quot;/api/cam&quot; alt=&quot;Webcam&quot; /&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-18">
+    <section class="slide-content"><h3 id="live-coding">Live coding</h3>
+<p>putting it all together on <em>IntelliJ idea</em></p>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-19">
+    <section class="slide-content"><h3 id="spunti-di-java-8">Spunti di Java 8</h3>
+<ul>
+<li>Optional</li>
+<li>Stream</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-20">
+    <section class="slide-content"><p><a href="https://github.com/francescou/spring-boot-IoT">https://github.com/francescou/spring-boot-IoT</a></p>
+<pre><code>git clone git@github.com:francescou/spring-boot-IoT.git
+
+./mvnw spring-boot:run</code></pre>
+</section>
+  </div>
+  <div class="slide hidden author-slide" id="slide-21">
+    <section class="slide-content"><div class="author">
+  <h1 class="name">Francesco Uliana</h1>
+    <h3 class="twitter">
+      <a href="http://twitter.com/@warrior10111">@warrior10111</a>
+    </h3>
+    <h3 class="url">
+      <a href="http://www.uliana.it/francesco/">http://www.uliana.it/francesco/</a>
+    </h3>
+    <h3 class="email">
+      <a href="mailto:francesco@uliana.it">francesco@uliana.it</a>
+    </h3>
+</div>
+</section>
+  </div>
+
+
+
+  <script type="text/javascript">
+    /**
+ * Returns the current page number of the presentation.
+ */
+function currentPosition() {
+  return parseInt(document.querySelector('.slide:not(.hidden)').id.slice(6));
+}
+
+
+/**
+ * Navigates forward n pages
+ * If n is negative, we will navigate in reverse
+ */
+function navigate(n) {
+  var position = currentPosition();
+  var numSlides = document.getElementsByClassName('slide').length;
+
+  /* Positions are 1-indexed, so we need to add and subtract 1 */
+  var nextPosition = (position - 1 + n) % numSlides + 1;
+
+  /* Normalize nextPosition in-case of a negative modulo result */
+  nextPosition = (nextPosition - 1 + numSlides) % numSlides + 1;
+
+  document.getElementById('slide-' + position).classList.add('hidden');
+  document.getElementById('slide-' + nextPosition).classList.remove('hidden');
+
+  updateProgress();
+  updateURL();
+  updateTabIndex();
+}
+
+
+/**
+ * Updates the current URL to include a hashtag of the current page number.
+ */
+function updateURL() {
+  try {
+    window.history.replaceState({} , null, '#' + currentPosition());
+  } catch (e) {
+    window.location.hash = currentPosition();
+  }
+}
+
+
+/**
+ * Sets the progress indicator.
+ */
+function updateProgress() {
+  var progressBar = document.querySelector('.progress-bar');
+
+  if (progressBar !== null) {
+    var numSlides = document.getElementsByClassName('slide').length;
+    var position = currentPosition() - 1;
+    var percent = (numSlides === 1) ? 100 : 100 * position / (numSlides - 1);
+    progressBar.style.width = percent.toString() + '%';
+  }
+}
+
+
+/**
+ * Removes tabindex property from all links on the current slide, sets
+ * tabindex = -1 for all links on other slides. Prevents slides from appearing
+ * out of control.
+ */
+function updateTabIndex() {
+  var allLinks = document.querySelectorAll('.slide a');
+  var position = currentPosition();
+  var currentPageLinks = document.getElementById('slide-' + position).querySelectorAll('a');
+  var i;
+
+  for (i = 0; i < allLinks.length; i++) {
+    allLinks[i].setAttribute('tabindex', -1);
+  }
+
+  for (i = 0; i < currentPageLinks.length; i++) {
+    currentPageLinks[i].removeAttribute('tabindex');
+  }
+}
+
+/**
+ * Determines whether or not we are currently in full screen mode
+ */
+function isFullScreen() {
+  return document.fullscreenElement ||
+         document.mozFullScreenElement ||
+         document.webkitFullscreenElement ||
+         document.msFullscreenElement;
+}
+
+/**
+ * Toggle fullScreen mode on document element.
+ * Works on chrome (>= 15), firefox (>= 9), ie (>= 11), opera(>= 12.1), safari (>= 5).
+ */
+function toggleFullScreen() {
+  /* Convenient renames */
+  var docElem = document.documentElement;
+  var doc = document;
+
+  docElem.requestFullscreen =
+      docElem.requestFullscreen ||
+      docElem.msRequestFullscreen ||
+      docElem.mozRequestFullScreen ||
+      docElem.webkitRequestFullscreen.bind(docElem, Element.ALLOW_KEYBOARD_INPUT);
+
+  doc.exitFullscreen =
+      doc.exitFullscreen ||
+      doc.msExitFullscreen ||
+      doc.mozCancelFullScreen ||
+      doc.webkitExitFullscreen;
+
+  isFullScreen() ? doc.exitFullscreen() : docElem.requestFullscreen();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Update the tabindex to prevent weird slide transitioning
+  updateTabIndex();
+
+  // If the location hash specifies a page number, go to it.
+  var page = window.location.hash.slice(1);
+  if (page) {
+    navigate(parseInt(page) - 1);
+  }
+
+  document.onkeydown = function (e) {
+    var kc = e.keyCode;
+
+    // left, down, H, J, backspace, PgUp - BACK
+    // up, right, K, L, space, PgDn - FORWARD
+    // enter - FULLSCREEN
+    if (kc === 37 || kc === 40 || kc === 8 || kc === 72 || kc === 74 || kc === 33) {
+      navigate(-1);
+    } else if (kc === 38 || kc === 39 || kc === 32 || kc === 75 || kc === 76 || kc === 34) {
+      navigate(1);
+    } else if (kc === 13) {
+      toggleFullScreen();
+    }
+  };
+
+  if (document.querySelector('.next') && document.querySelector('.prev')) {
+    document.querySelector('.next').onclick = function (e) {
+      e.preventDefault();
+      navigate(1);
+    };
+
+    document.querySelector('.prev').onclick = function (e) {
+      e.preventDefault();
+      navigate(-1);
+    };
+  }
+});
+
+
+  </script>
+</body>
+</html>
